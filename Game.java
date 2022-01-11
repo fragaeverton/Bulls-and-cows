@@ -1,9 +1,14 @@
 package bullscows;
 
-import java.util.Arrays;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static bullscows.GameOutput.*;
 
 public class Game {
-    private final int[] code;
+    private final List<Integer> code;
     private GameState state;
     int counter;
     public static String sCode;
@@ -17,6 +22,7 @@ public class Game {
     private void startGame() {
         state = GameState.PLAYING;
         counter++;
+        playerTurnMessage(counter);
     }
 
     public boolean isWorking() {
@@ -33,57 +39,49 @@ public class Game {
                 break;
         }
     }
-
     public void checkGame(String givenGuess) {
-        int cow = 0;
-        int bull = 0;
-        int[] guess = getCollection(givenGuess);
-        for (int i = 0; i < code.length; i++) {
-            for (int k : guess) {
-                if (code[i] == k) {
-                    cow++;
-                }
-            }
-            if (code[i] == guess[i]) {
-                bull++;
-                cow--;
-            }
-        }
-        if (bull == 4) {
-            System.out.printf("Grade 4 bulls.\nCongrats! The secret code is %s.", givenGuess);
+        int[] bullsCows = getBullsCows(givenGuess);
+        int bull = bullsCows[0];
+        int cow = bullsCows[1];
+        if (bull == sCode.length()) {
+            winningMessage(bull);
             state = GameState.OVER;
         } else if (bull == 0 && cow == 0) {
-            System.out.println("Grade: None. The secret code is " + sCode + ".");
+            noneMessage();
             startGame();
-        } else {
-            String msgBull;
-            if (bull == 0) {
-                msgBull = "";
-            } else {
-                msgBull = bull + " bull(s)";
-            }
-            String msgCow;
-            if (cow == 0) {
-                msgCow = "";
-            } else {
-                msgCow = cow + " cow(s)";
-            }
-            if (!msgBull.isEmpty() && !msgCow.isEmpty()) {
-                System.out.println("Grade: " + msgBull + " and " + msgCow + ". The secret code is " + sCode + ".");
-            } else {
-                System.out.println("Grade: " + msgBull + msgCow + ". The secret code is " + sCode + ".");
-            }
-            state = GameState.OVER;
-            //startGame();
+        }else {
+            String msgBull = (bull == 0) ? "" : ((bull == 1) ? 1 + " bull" : bull + " bulls");
+            String msgCow = (cow == 0) ? "" : ((cow == 1) ? 1 + " cow" : cow + " cows");
+            String full = (!msgBull.isEmpty() && !msgCow.isEmpty()) ? "Grade: " + msgBull + " and " + msgCow : "Grade: " + msgBull + msgCow;
+            System.out.println(full);
+            startGame();
         }
 
     }
 
-    public static int[] getCollection(String digit){
-        int first = Character.getNumericValue(digit.charAt(0));
-        int second = Character.getNumericValue(digit.charAt(1));
-        int third = Character.getNumericValue(digit.charAt(2));
-        int forth = Character.getNumericValue(digit.charAt(3));
-        return new int[]{first, second, third, forth};
+    private int[] getBullsCows(String givenGuess) {
+        int cow = 0;
+        int bull = 0;
+        List<Integer> guess = getCollection(givenGuess);
+        for (int i = 0; i < code.size(); i++) {
+            for (int k : guess) {
+                if (code.get(i) == k) {
+                    cow++;
+                }
+            }
+            if (Objects.equals(code.get(i), guess.get(i))) {
+                bull++;
+                cow--;
+            }
+        }
+        return new int[]{bull, cow};
+    }
+
+    public static List<Integer> getCollection(String digit){
+        List<Integer> digits = new ArrayList<>();
+        for (int i = 0; i < digit.length(); i++) {
+            digits.add(Character.getNumericValue(digit.charAt(i)));
+        }
+        return digits;
     }
 }

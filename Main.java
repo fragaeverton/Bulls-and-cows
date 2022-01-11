@@ -5,31 +5,37 @@ import java.util.LinkedHashSet;
 import java.util.Scanner;
 import java.util.Set;
 
+import static bullscows.GameOutput.*;
+
 public class Main {
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
-        /*String secretCode = "9305";//scanner.nextInt();
+        chooseGameLevelMessage();
 
-        Game game = new Game(secretCode);
-
-
-        while (game.isWorking()) {
-            game.execute(scanner.nextLine());
-        }*/
-        int number = scanner.nextInt();
-        String digit = "";
-        if (number > 10) {
-            System.out.printf("Error: can't generate a secret number with a length of %d because there aren't enough unique digits.\n", number);
+        int length = scanner.nextInt();
+        String secretCode = "";
+        if (length > 10) {
+            outOfLimitMessage(length);
         } else {
-            while (digit.length() < number) {
-                digit = pseudoNumberGenerate(number);
+            startMessage();
+            while (secretCode.length() < length) {
+                secretCode = pseudoNumberGenerate(length);
             }
-            System.out.println("The random secret number is " + digit + ".");
+            startGame(secretCode);
         }
 
 
+    }
+
+    private static void startGame(String secretCode) {
+        Scanner scanner = new Scanner(System.in);
+        Game game = new Game(secretCode);
+
+        while (game.isWorking()) {
+            game.execute(scanner.nextLine());
+        }
     }
 
     private static String pseudoNumberGenerate(int number) {
