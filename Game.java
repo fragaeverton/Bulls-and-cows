@@ -8,7 +8,7 @@ import java.util.Objects;
 import static bullscows.GameOutput.*;
 
 public class Game {
-    private final List<Integer> code;
+    private final List<Character> code;
     private GameState state;
     int counter;
     public static String sCode;
@@ -62,7 +62,7 @@ public class Game {
     private int[] getBullsCows(String givenGuess) {
         int cow = 0;
         int bull = 0;
-        List<Integer> guess = getCollection(givenGuess);
+        List<Character> guess = getCollection(givenGuess);
         for (int i = 0; i < code.size(); i++) {
             for (int k : guess) {
                 if (code.get(i) == k) {
@@ -77,10 +77,10 @@ public class Game {
         return new int[]{bull, cow};
     }
 
-    public static List<Integer> getCollection(String digit){
-        List<Integer> digits = new ArrayList<>();
+    public static List<Character> getCollection(String digit){
+        List<Character> digits = new ArrayList<>();
         for (int i = 0; i < digit.length(); i++) {
-            digits.add(Character.getNumericValue(digit.charAt(i)));
+            digits.add(digit.charAt(i));
         }
         return digits;
     }
