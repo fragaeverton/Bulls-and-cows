@@ -9,18 +9,48 @@ public class Main {
 
     public static void main(String[] args) {
         Locale.setDefault(Locale.US);
-        Scanner scanner = new Scanner(System.in);
+        System.out.println();
         lengthLevelMessage();
-        int length = scanner.nextInt();
+        int length = inputNumber();
         rangeLevelMessage();
-        int range = scanner.nextInt();
-        tipMessage(length, range);
+        int range = inputNumber();
+        checkInput(length, range);
 
-        if (length > 10) {
-            outOfLimitMessage(length);
+    }
+
+    private static int inputNumber() {
+        String mInput = new Scanner(System.in).nextLine();
+        int num = 0;
+        try {
+            num = Integer.parseInt(mInput);
+        } catch (NumberFormatException e){
+            System.out.printf("\"%s\" isn't a valid number.", mInput);
+        }
+        finally {
+            if (num == 0) {
+                System.out.println("error");
+                System.exit(0);
+            }
+        }
+        return num;
+    }
+
+    private static void checkInput(int length, int range) {
+        if (range >= length) {
+            if (range <= 36) {
+                if (length <= 10) {
+                    tipMessage(length, range);
+                    startMessage();
+                    startGame(randomGenerator(length, range));
+                } else {
+                    outOfLimitMessage(length);
+                }
+            } else {
+                outOfRangeMessage();
+            }
         } else {
-            startMessage();
-            startGame(randomGenerator(length, range));
+            wrongInput(length, range);
+            System.exit(0);
         }
     }
 
@@ -35,6 +65,7 @@ public class Main {
     private static String randomGenerator(int number, int range) {
         List<Character> digits = digitsImu.subList(0, range);
         StringBuilder sb = new StringBuilder();
+        
         while (digits.get(0) == '0') {
             Collections.shuffle(digits);
         }
@@ -43,4 +74,5 @@ public class Main {
         }
         return sb.substring(0, number);
     }
+    
 }

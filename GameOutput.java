@@ -14,6 +14,10 @@ public class GameOutput {
         System.out.println("Input the number of possible symbols in the code:");
     }
 
+    protected static void wrongInput(int length, int range) {
+        System.out.printf("Error: it's not possible to generate a code with a length of %d with %d unique symbols.", length, range);
+    }
+
     protected static void tipMessage(int length, int range) {
         StringBuilder stars = new StringBuilder();
         stars.append("*".repeat(Math.max(0, length)));
@@ -28,6 +32,9 @@ public class GameOutput {
 
     protected static void outOfLimitMessage(int length) {
         System.out.printf("Error: can't generate a secret number with a length of %d because there aren't enough unique digits.\n", length);
+    }
+    protected static void outOfRangeMessage() {
+        System.out.print("Error: maximum number of possible symbols in the code is 36 (0-9, a-z).\n");
     }
 
     protected static void startMessage() {
